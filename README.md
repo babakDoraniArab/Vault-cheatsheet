@@ -35,6 +35,17 @@ You next need to unseal your Vault server, providing the unseal key that the "in
 
 `vault status`
 
+## Use the KV V2 Secrets Engine
+
+
+to enable KV v2 secrets engine you need to run the following command
+
+`vault secrets enable -version=2 kv`
+
+Next, write a secret to your new secrets engine:
+
+`vault kv put kv/a-secret value=1234`
+
 
 ## basic authentication
 
@@ -83,3 +94,72 @@ now we have userpass enabled and we can add policies to give different users acc
 let's create another userpass 
 
 ` vault write auth/userpass/users/user2 password=password2 `
+
+you can list all the users in the userpass path with the following command
+`vault list auth/userpass/users`
+
+now we need to create policy files for each user.
+
+### user-1-policy.hcl 
+```
+path "kv/data/<babak>/*" {
+  capabilities = ["create", "update", "read", "delete"]
+}
+path "kv/delete/<babak>/*" {
+  capabilities = ["update"]
+}
+path "kv/metadata/<babak>/*" {
+  capabilities = ["list", "read", "delete"]
+}
+path "kv/destroy/<babak>/*" {
+  capabilities = ["update"]
+}
+
+# Additional access for UI
+path "kv/metadata" {
+  capabilities = ["list"]
+}
+```
+
+### user-2-policy.hcl 
+```
+path "kv/data/<user2>/*" {
+  capabilities = ["create", "update", "read", "delete"]
+}
+path "kv/delete/<user2>/*" {
+  capabilities = ["update"]
+}
+path "kv/metadata/<user2>/*" {
+  capabilities = ["list", "read", "delete"]
+}
+path "kv/destroy/<user2>/*" {
+  capabilities = ["update"]
+}
+
+# Additional access for UI
+path "kv/metadata" {
+  capabilities = ["list"]
+}
+```
+
+
+Now we need to create this two policies 
+```
+vault policy write <user_1> /vault/policies/user-1-policy.hcl
+vault policy write <user_2> /vault/policies/user-2-policy.hcl
+
+#for me it would be : 
+vault policy write babak /vault/policies/user-1-policy.hcl
+vault policy write user2 /vault/policies/user-2-policy.hcl
+
+```
+ok we have two policies right now, babak and user2 and both of them are connect to their hcl policy file.
+
+Now, you can assign the new policies to the users by updating the policies assigned to the users:
+
+```
+vault write auth/userpass/users/babak/policies policies=babak
+vault write auth/userpass/users/user2/policies policies=user2
+
+
+```
