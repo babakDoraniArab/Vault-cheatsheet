@@ -87,3 +87,7 @@ to examine the current lease with a command like this:
 ### revoke the credentials
 to revoke the credential you can use the command below
 `vault write sys/leases/revoke lease_id="<lease_id>" `
+
+
+## configure Vault and nodejs backend 
+[https://dzone.com/articles/managing-secrets-in-nodejs-with-hashicorp-vault](https://dzone.com/articles/managing-secrets-in-nodejs-with-hashicorp-vault)
