@@ -69,4 +69,21 @@ vault write lob_a/workshop/database/roles/workshop-app \
 
   you can get user pass based on the same role that you did curd. with the command below
   `vault read lob_a/workshop/database/creds/workshop-app-long`
-  
+
+## Renew and Revoke Database Credentials
+
+first create a credentials with the following command
+`vault read lob_a/workshop/database/creds/workshop-app`
+
+if you want to increment the lease time you can go with the command below
+`vault write sys/leases/renew lease_id="<lease_id>" increment="120"`
+be sure that your increments needs to be lower than max_ttl 
+
+to examine the current lease with a command like this:
+`vault write sys/leases/lookup lease_id="<lease_id>"`
+
+
+
+### revoke the credentials
+to revoke the credential you can use the command below
+`vault write sys/leases/revoke lease_id="<lease_id>" `
