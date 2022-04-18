@@ -5,3 +5,10 @@ instead of encrypting the database, you can encrypt and decrypt all the transiti
 [https://www.vaultproject.io/docs/secrets/transit/](https://www.vaultproject.io/docs/secrets/transit/)
 
 ## Enable the Transit Secrets Engine
+all secrets engine must be enabled before they can be used. so let's check them all
+`vault secrets list`
+
+you can enable Transit secret engin with the command below
+`vault secrets enable -path=lob_a/workshop/transit transit`
+
+you can verify it with `vault secrets list` and it's obvious
