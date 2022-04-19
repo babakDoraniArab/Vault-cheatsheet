@@ -146,3 +146,37 @@ vault token create -ttl=2h -policy=default -format=json \
 ```
 
 `vault token revoke $(cat revoke_token.txt)`
+
+
+
+## Apply Token with approle 
+
+first enable `approle` auth method 
+
+`vault auth enable approle`
+
+then create a role for that  let's call it jenkins
+`vault write auth/approle/role/jenkins policies="jenkins" period="24h"`
+
+we need to fetch the `role_id` and `secret_id` of the role that we have created.
+
+```
+vault read -format=json auth/approle/role/jenkins/role-id \
+    | jq -r ".data.role_id" > role_id.txt
+
+```
+```
+vault write -f -format=json auth/approle/role/jenkins/secret-id \
+    | jq -r ".data.secret_id" > secret_id.txt
+
+```
+
+### Now we can create a token with approle authentication method
+```
+vault write -format=json auth/approle/login role_id=$(cat role_id.txt) \
+     secret_id=$(cat secret_id.txt) \
+     | jq -r ".auth.client_token" > jenkins-token.txt
+
+```
+you can validate it with command below 
+`vault token lookup $(cat jenkins-token.txt)`
