@@ -123,3 +123,26 @@ vault token create -role=zabbix -format=json \
 ```
 now let's check it 
 `vault token lookup $(cat zabbix-token.txt)`
+
+## how to manage token's lifecycle by renewing or revoking tokens.
+
+You can renew the service token's TTL as long as it has not expired.
+
+Create a token and save its value in a file named ‍‍‍‍‍`test_token.txt`
+```
+vault token create -ttl=45 -explicit-max-ttl=120 -policy=default -format=json \
+    | jq -r ".auth.client_token" > test_token.txt
+```
+to renew the token's TTL $(cat test_token.txt)
+‍`vault token renew $(cat test_token.txt)`
+
+to renew and extend it 
+`vault token renew -increment=60 $(cat test_token.txt)`
+
+### revoke token 
+```
+vault token create -ttl=2h -policy=default -format=json \
+    | jq -r ".auth.client_token" > revoke_token.txt
+```
+
+`vault token revoke $(cat revoke_token.txt)`
