@@ -104,3 +104,22 @@ revoke the parent token `vault token revoke $(cat parent_token.txt)`
 check the orphan token `vault token lookup $(cat orphan_token.txt)`
 it's working.
 
+## How to create token roles
+Instead of passing a number of parameters, you can create a role with a set of parameter values set.
+
+Create a token role named zabbix.
+```
+vault write auth/token/roles/zabbix \
+    allowed_policies="policy1, policy2, policy3" \
+    orphan=true \
+    token_ttl=8h
+
+```
+now we can create tokens with role with our passing lot's of parameters
+```
+vault token create -role=zabbix -format=json \
+   | jq -r ".auth.client_token" > zabbix-token.txt
+
+```
+now let's check it 
+`vault token lookup $(cat zabbix-token.txt)`
