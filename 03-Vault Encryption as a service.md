@@ -8,8 +8,13 @@ instead of encrypting the database, you can encrypt and decrypt all the transiti
 all secrets engine must be enabled before they can be used. so let's check them all
 `vault secrets list`
 
+
 you can enable Transit secret engin with the command below
 `vault secrets enable -path=lob_a/workshop/transit transit`
+or you can have it with this command with the default path transit/
+```
+vault secrets enable transit
+```
 
 you can verify it with `vault secrets list` and it's obvious
 
@@ -19,6 +24,10 @@ more info [https://www.vaultproject.io/docs/secrets/transit/#key-types](https://
 
 you need at least one key. its name is customer-key
 `vault write -f lob_a/workshop/transit/keys/customer-key`
+or if you are using default path you acn add keys
+```
+vault write -f transit/keys/my-key
+```
 
 you need to configure you application to use the encryption, for example for the python web app it can be like this 
 ```
@@ -44,3 +53,36 @@ KeyName=customer-key
 
 
 ```
+
+
+
+### Encrypting Data
+
+if you want to encrypt your data . you need to convert it to base64 and use the command below 
+```sh
+vault write transit/encrypt/demo-key plaintext=IlRoaXMgaXMgb3VyIGVuY29kZWQgdGV4dCI=
+```
+
+also you can use this command too 
+```sh
+vault write transit/encrypt/my-key plaintext=$(base64 <<< "my secret data")
+```
+I'm pretty sure that you know we had created my-key in the line 29 for transit secrets engine
+
+| you need to store the ciphertext in your database and you can use it whenever you decided to decrypt your data.
+
+### Decrypting Data
+```sh
+vault write transit/decrypt/demo-key ciphertext=YOUR-CIPHERTEXT-HERE
+
+```
+it will give you the base64 info and you can use it with this command ` base64 --decode <<< "bXkgc2VjcmV0IGRhdGEK"` I've used the base64 that the top command is created for use
+### Website Used During Video:
+
+https://www.base64decode.org/
+
+
+
+## you can rotate your key 
+Rotate the underlying encryption key. This will generate a new encryption key and add it to the keyring for the
+`vault write -f transit/keys/my-key/rotate`
