@@ -10,7 +10,9 @@
 please check the folders for more information
 ## Published articles:
 
-- [01-Vault Basics](01-Vault%20Basics.md)
-- [02-Vault Dynamic Database Credentials](02-Vault%20Dynamic%20Database%20Credentials.md)
-- [03-Vault Encryption a service](03-Vault%20Encryption%20as%20a%20service.md)
-- [03-Policies](04-Policies.md)
+- [part01-vault-basics](./part01-vault-basics/README.md)
+- [part02-vault-dynamic-database-credentials](./part02-vault-dynamic-database-credentials/README.md)
+- [part03-vault-encryption-as-a-service](./part03-vault-encryption-as-a-service/README.md)
+- [part04-policies](./part04-policies/README.md)
+- [part05-tokens](./part05-tokens/README.md)
+- [part06-vault-secret-kv](./part06-vault-secret-kv/README.md)
