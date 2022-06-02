@@ -1,4 +1,4 @@
-# Terraform Associate Tips
+# Vault Cheatsheet
 
 <p align="center" style="text-align:center;">
   <a href="https://www.hashicorp.com/certification/vault-associate">
